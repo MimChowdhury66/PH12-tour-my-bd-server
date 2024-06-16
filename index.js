@@ -2,7 +2,7 @@
 const express = require('express')
 const app = express();
 const cors = require('cors')
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 const port = process.env.PORT || 5000
 
@@ -30,6 +30,7 @@ async function run() {
 
     const packageCollection = client.db('TourDB').collection('package')
     const guideCollection = client.db('TourDB').collection('Guide')
+    const storyCollection = client.db('TourDB').collection('story')
 
 
     app.get('/package', async (req, res) => {
@@ -45,8 +46,17 @@ async function run() {
       res.send(result)
     })
 
+    app.get('/story', async (req, res) => {
+      const result = await storyCollection.find().toArray();
+      res.send(result)
+    })
 
 
+    app.get('/guide/:id', async (req, res) => {
+      const id = req.params.id;
+      const result = await guideCollection.findOne({ _id: new ObjectId(id) });
+      res.send(result)
+    })
 
 
 
