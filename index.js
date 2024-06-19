@@ -57,11 +57,29 @@ async function run() {
       const result = await guideCollection.findOne({ _id: new ObjectId(id) });
       res.send(result)
     })
+    app.get('/story/:id', async (req, res) => {
+      const id = req.params.id;
+      const result = await storyCollection.findOne({ _id: new ObjectId(id) });
+      res.send(result)
+    })
 
 
 
+    app.get('/package/:tourType', async (req, res) => {
+      // console.log(req.params.tourType)
+      const cursor = packageCollection.find({ TourType: req.params.tourType });
+      const result = await cursor.toArray();
+      // console.log(result)
+      res.send(result)
+    })
 
 
+
+    app.post('/guide', async (req, res) => {
+      const newPost = req.body;
+      const result = await guideCollection.insertOne(newPost);
+      res.send(result)
+    })
 
 
 
