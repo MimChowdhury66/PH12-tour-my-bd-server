@@ -31,6 +31,7 @@ async function run() {
     const packageCollection = client.db('TourDB').collection('package')
     const guideCollection = client.db('TourDB').collection('Guide')
     const storyCollection = client.db('TourDB').collection('story')
+    const reviewCollection = client.db('TourDB').collection('review')
 
 
     app.get('/package', async (req, res) => {
@@ -75,15 +76,23 @@ async function run() {
 
 
 
-    app.post('/guide', async (req, res) => {
+    app.post('/review', async (req, res) => {
       const newPost = req.body;
-      const result = await guideCollection.insertOne(newPost);
+      const result = await reviewCollection.insertOne(newPost);
       res.send(result)
     })
 
 
 
+    app.get('/review/:guideId', async (req, res) => {
 
+
+      const query = { guideId: req.params.guideId };
+      // console.log(req.params.guideId)
+      const result = await reviewCollection.find(query).toArray();
+      // console.log(result)
+      res.send(result)
+    })
 
 
 
