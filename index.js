@@ -32,6 +32,7 @@ async function run() {
     const guideCollection = client.db('TourDB').collection('Guide')
     const storyCollection = client.db('TourDB').collection('story')
     const reviewCollection = client.db('TourDB').collection('review')
+    const bookingCollection = client.db('TourDB').collection('booking')
 
 
     app.get('/package', async (req, res) => {
@@ -41,7 +42,11 @@ async function run() {
       res.send(result)
     })
 
-
+    app.get('/package/:id', async (req, res) => {
+      const id = req.params.id;
+      const result = await packageCollection.findOne({ _id: new ObjectId(id) });
+      res.send(result)
+    })
     app.get('/guide', async (req, res) => {
       const result = await guideCollection.find().toArray();
       res.send(result)
@@ -95,6 +100,11 @@ async function run() {
     })
 
 
+    app.post('/booking', async (req, res) => {
+      const newPost = req.body;
+      const result = await bookingCollection.insertOne(newPost);
+      res.send(result)
+    })
 
 
 
