@@ -34,6 +34,7 @@ async function run() {
     const reviewCollection = client.db('TourDB').collection('review')
     const bookingCollection = client.db('TourDB').collection('booking')
     const userCollection = client.db('TourDB').collection('users')
+    const wishlistCollection = client.db('TourDB').collection('wishlist')
 
 
     app.get('/package', async (req, res) => {
@@ -57,7 +58,16 @@ async function run() {
       const result = await storyCollection.find().toArray();
       res.send(result)
     })
-
+    app.post('/story', async (req, res) => {
+      const newPost = req.body;
+      const result = await storyCollection.insertOne(newPost);
+      res.send(result)
+    })
+    app.post('/wishlist', async (req, res) => {
+      const newPost = req.body;
+      const result = await wishlistCollection.insertOne(newPost);
+      res.send(result)
+    })
 
     app.get('/guide/:id', async (req, res) => {
       const id = req.params.id;
@@ -107,6 +117,15 @@ async function run() {
       const result = await bookingCollection.insertOne(newPost);
       res.send(result)
     })
+    app.get('/booking/:email', async (req, res) => {
+      const email = req.params.email;
+      const query = { Email: email };
+      const result = await bookingCollection.find(query).toArray();
+      console.log(result)
+      res.send(result)
+    })
+
+
 
 
     // user collection
