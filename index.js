@@ -33,6 +33,7 @@ async function run() {
     const storyCollection = client.db('TourDB').collection('story')
     const reviewCollection = client.db('TourDB').collection('review')
     const bookingCollection = client.db('TourDB').collection('booking')
+    const userCollection = client.db('TourDB').collection('users')
 
 
     app.get('/package', async (req, res) => {
@@ -72,10 +73,10 @@ async function run() {
 
 
     app.get('/package/:tourType', async (req, res) => {
-      // console.log(req.params.tourType)
+      console.log(req.params.tourType)
       const cursor = packageCollection.find({ TourType: req.params.tourType });
       const result = await cursor.toArray();
-      // console.log(result)
+      console.log(result)
       res.send(result)
     })
 
@@ -106,6 +107,18 @@ async function run() {
       res.send(result)
     })
 
+
+    // user collection
+    app.post('/users', async (req, res) => {
+      const user = req.body;
+      const query = { email: user.email };
+      const existingUser = await userCollection.findOne(query);
+      if (existingUser) {
+        return res.send({ message: 'user already exist' })
+      }
+      const result = await userCollection.insertOne(user);
+      res.send(result)
+    })
 
 
 
