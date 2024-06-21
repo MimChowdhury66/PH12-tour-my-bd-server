@@ -72,11 +72,12 @@ async function run() {
 
 
 
-    app.get('/package/:tourType', async (req, res) => {
-      console.log(req.params.tourType)
+    app.get('/packageTourType/:tourType', async (req, res) => {
+      // console.log('tour type', req.params.tourType)
+
       const cursor = packageCollection.find({ TourType: req.params.tourType });
       const result = await cursor.toArray();
-      console.log(result)
+      // console.log('result', result)
       res.send(result)
     })
 
@@ -118,6 +119,15 @@ async function run() {
       }
       const result = await userCollection.insertOne(user);
       res.send(result)
+    })
+
+
+    app.get('/role/:email', async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const userRole = await userCollection.findOne(query);
+      console.log(email)
+      res.send(userRole.role)
     })
 
 
