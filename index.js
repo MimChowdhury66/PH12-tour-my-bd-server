@@ -35,6 +35,7 @@ async function run() {
     const bookingCollection = client.db('TourDB').collection('booking')
     const userCollection = client.db('TourDB').collection('users')
     const wishlistCollection = client.db('TourDB').collection('wishlist')
+    const requestToAdminCollection = client.db('TourDB').collection('requestToAdmin')
 
 
     app.get('/package', async (req, res) => {
@@ -153,6 +154,49 @@ async function run() {
 
 
 
+    // request to admin
+    app.post('/requestToAdmin', async (req, res) => {
+      const newPost = req.body;
+      const result = await userCollection.insertOne(newPost);
+      res.send(result)
+    })
+    app.get('/requestToAdmin', async (req, res) => {
+      const result = await userCollection.find().toArray();
+      res.send(result)
+    })
+
+
+    // make admin api
+    app.patch('/users/admin/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const updateDoc = {
+        $set: {
+          role: 'admin',
+
+        }
+      }
+      const result = await userCollection.updateOne(query, updateDoc);
+      res.send(result)
+
+    })
+    // make guide api
+    app.patch('/users/guide/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const updateDoc = {
+        $set: {
+          role: 'guide',
+
+        }
+      }
+      const result = await userCollection.updateOne(query, updateDoc);
+      const user = await userCollection.findOne(query);
+      console.log(user);
+      await guideCollection.insertOne(user);
+      res.send(result)
+
+    })
 
     // user collection
     app.post('/users', async (req, res) => {
@@ -166,6 +210,13 @@ async function run() {
       res.send(result)
     })
 
+    app.get('/users', async (req, res) => {
+      const result = await userCollection.find().toArray();
+      res.send(result)
+    })
+
+
+
 
     app.get('/role/:email', async (req, res) => {
       const email = req.params.email;
@@ -175,7 +226,8 @@ async function run() {
       res.send(userRole.role)
     })
 
-
+    // search user
+  
 
 
     // Connect the client to the server	(optional starting in v4.7)
