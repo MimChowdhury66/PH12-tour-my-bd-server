@@ -68,6 +68,24 @@ async function run() {
       const result = await wishlistCollection.insertOne(newPost);
       res.send(result)
     })
+    app.get('/wishlist/:email', async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const result = await wishlistCollection.find(query).toArray();
+      // console.log('wishlist', result)
+      res.send(result)
+    })
+
+    app.delete('/wishlistDelete/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { packageId: (id) };
+      // console.log(id)
+      const result = await wishlistCollection.deleteOne(query);
+      // console.log(result)
+      res.send(result)
+    })
+
+
 
     app.get('/guide/:id', async (req, res) => {
       const id = req.params.id;
@@ -121,7 +139,7 @@ async function run() {
       const email = req.params.email;
       const query = { Email: email };
       const result = await bookingCollection.find(query).toArray();
-      console.log(result)
+      // console.log(result)
       res.send(result)
     })
 
@@ -145,7 +163,7 @@ async function run() {
       const email = req.params.email;
       const query = { email: email };
       const userRole = await userCollection.findOne(query);
-      console.log(email)
+      // console.log(email)
       res.send(userRole.role)
     })
 
