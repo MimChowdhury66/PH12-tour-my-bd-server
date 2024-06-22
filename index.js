@@ -43,7 +43,11 @@ async function run() {
       }).toArray();
       res.send(result)
     })
-
+    app.post('/package', async (req, res) => {
+      const newPost = req.body;
+      const result = await packageCollection.insertOne(newPost);
+      res.send(result)
+    })
     app.get('/package/:id', async (req, res) => {
       const id = req.params.id;
       const result = await packageCollection.findOne({ _id: new ObjectId(id) });
