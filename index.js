@@ -53,7 +53,11 @@ async function run() {
       const result = await guideCollection.find().toArray();
       res.send(result)
     })
-
+    app.post('/guide', async (req, res) => {
+      const newPost = req.body;
+      const result = await guideCollection.insertOne(newPost);
+      res.send(result)
+    })
     app.get('/story', async (req, res) => {
       const result = await storyCollection.find().toArray();
       res.send(result)
