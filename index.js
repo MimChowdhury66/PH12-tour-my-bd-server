@@ -212,9 +212,15 @@ async function run() {
       res.send(result)
     })
 
+
     app.get('/users', async (req, res) => {
-      const result = await userCollection.find().toArray();
-      res.send(result)
+      const searchValue = req.query?.search;
+      const sort = req.query?.sort;
+      const filter = { email: { $regex: searchValue, $options: "i" } };
+      if (sort) filter.role = sort;
+      // console.log(searchValue, sort)
+      const result = await userCollection.find(filter).toArray();
+      res.send(result);
     })
 
 
